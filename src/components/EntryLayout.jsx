@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import Loading from "./loading";
 import { Link } from "react-router-dom";
+import Loading from "./Loading.jsx"
 
 export default function EntryLayout({ children }) {
   return (
