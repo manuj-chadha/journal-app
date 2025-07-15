@@ -5,10 +5,12 @@ import { Toaster } from "sonner"; // Make sure sonner is installed
 // import "./index.css"; // Tailwind or global styles
 import "react-quill-new/dist/quill.snow.css";
 import Header from "@/components/shared/Header";
+import ScrollToTop from "@/components/ScrollToTop";
 
 function Layout({ children }) {
   return (
     <>
+    <ScrollToTop />
       {/* Background Image Layer */}
       <div className="inset-0 bg-[url('/bg.jpg')] opacity-50 fixed -z-10" />
 

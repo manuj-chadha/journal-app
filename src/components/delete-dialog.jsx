@@ -1,7 +1,4 @@
-"use client";
-
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,33 +12,44 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { deleteJournalEntry } from "@/actions/journal";
-import useFetch from "@/hooks/use-fetch";
+import { useNavigate } from "react-router-dom";
+import API from "@/lib/axios";
 
-export default function DeleteDialog({ entryId }) {
-  const router = useRouter();
+export default function DeleteDialog({ entry }) {
+  const navigate = useNavigate();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [ isDeleting, setIsDeleting ]=useState(false);
 
-  const {
-    loading: isDeleting,
-    fn: deleteEntryFn,
-    data: deletedEntry,
-  } = useFetch(deleteJournalEntry);
+  // const {
+  //   loading: isDeleting,
+  //   fn: deleteEntryFn,
+  //   data: deletedEntry,
+  // } = useFetch(deleteJournalEntry);
 
-  useEffect(() => {
-    if (deletedEntry && !isDeleting) {
-      setDeleteDialogOpen(false);
-      toast.error("Journal entry deleted successfully");
-      router.push(
-        `/collection/${
-          deletedEntry.collectionId ? deletedEntry.collectionId : "unorganized"
-        }`
-      );
-    }
-  }, [deletedEntry, isDeleting]);
+  // useEffect(() => {
+  //   if (deletedEntry && !isDeleting) {
+  //     setDeleteDialogOpen(false);
+  //   }
+  // }, [deletedEntry, isDeleting]);
 
   const handleDelete = async () => {
-    await deleteEntryFn(entryId);
+    setIsDeleting(true);
+    try {
+      await API.delete(`/journal/${entry.id}`, {withCredentials: true});
+      setDeleteDialogOpen(false);
+      toast.error("Journal entry deleted successfully");
+      navigate(
+        `/collection/${
+          entry.collectionId ? entry.collectionId : "unorganized"
+        }`
+      );
+    } catch (error) {
+      console.error(error);
+    }
+    finally {
+      setIsDeleting(false);
+    }
+
   };
 
   return (

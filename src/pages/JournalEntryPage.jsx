@@ -1,21 +1,38 @@
 import { format } from "date-fns";
-import Link from "next/link";
-import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import DeleteDialog from "@components/delete-dialog";
-import EditButton from "@components/edit-button";
 import { getMoodById } from "@/lib/moods";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import API from "@/lib/axios";
+// import DeleteDialog from "@/components/delete-dialog";
+import EditButton from "@/components/edit-button";
+import DeleteDialog from "@/components/delete-dialog";
 // import { getJournalEntry } from "@/actions/journal";
 
-export default async function JournalEntryPage({ params }) {
-  const { id } = await params;
-  const entry = await getJournalEntry(id);
+export default function JournalEntryPage() {
+  const { journalId } = useParams();
+  const [entry, setEntry]=useState({});
   const mood = getMoodById(entry.mood);
+
+  useEffect(()=> {
+    const fetchJournal=async()=>{
+      try {
+        const res=await API.get(`/journal/${journalId}`, { withCredentials: true });
+        if(res.data.success){
+          setEntry(res.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching the journal: ", error);
+        
+      }
+    };
+    fetchJournal();
+  }, [journalId]);
 
   return (
     <>
       {/* Header with Mood Image */}
-      {entry.moodImageUrl && (
+      {/* {entry.moodImageUrl && (
         <div className="relative h-48 md:h-64 w-full">
           <Image
             src={entry.moodImageUrl}
@@ -25,7 +42,7 @@ export default async function JournalEntryPage({ params }) {
             priority
           />
         </div>
-      )}
+      )} */}
 
       <div className="p-6 space-y-6">
         {/* Header Section */}
@@ -38,20 +55,25 @@ export default async function JournalEntryPage({ params }) {
                 </h1>
               </div>
               <p className="text-gray-500">
-                Created {format(new Date(entry.createdAt), "PPP")}
+                {/* Created {format(new Date(entry.createdAt), "PPP")} */}
+                {entry.createdAt ? (
+                  format(new Date(entry.createdAt), "PPP")
+                ) : (
+                  "Unknown Date"
+                )}
               </p>
             </div>
 
             <div className="flex items-center gap-2">
-              <EditButton entryId={id} />
-              <DeleteDialog entryId={id} />
+              <EditButton entry={entry} />
+              <DeleteDialog entry={entry} />
             </div>
           </div>
 
           {/* Tags Section */}
           <div className="flex flex-wrap gap-2">
             {entry.collection && (
-              <Link href={`/collection/${entry.collection.id}`}>
+              <Link to={`/collection/${entry.collection.id}`}>
                 <Badge>Collection: {entry.collection.name}</Badge>
               </Link>
             )}
@@ -80,7 +102,11 @@ export default async function JournalEntryPage({ params }) {
 
         {/* Footer */}
         <div className="text-sm text-gray-500 pt-4 border-t">
-          Last updated {format(new Date(entry.updatedAt), "PPP 'at' p")}
+          {entry.createdAt ? (
+                  <>Last updated {format(new Date(entry.updatedAt), "PPP 'at' p")}</>
+                ) : (
+                  "Unknown Date"
+                )}
         </div>
       </div>
     </>

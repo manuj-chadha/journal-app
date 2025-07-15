@@ -69,7 +69,7 @@ const CollectionPreview = ({
 
   return (
     <Link
-      to={`/collection/${isUnorganized ? "unorganized" : id}`}
+      to={`/collection/${id}`}
       className="group relative"
     >
       <FolderTab

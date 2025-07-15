@@ -3,8 +3,9 @@ import { Card, CardContent } from "./ui/card";
 // import Link from "next/link";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
+import { getMoodById } from "@/lib/moods";
 
-const EntryCard = ({ entry }) => {
+const EntryCard = ({ entry, collectionTitle }) => {
   return (
     <Link to={`/journal/${entry.id}`}>
       <Card className="hover:shadow-md transition-shadow">
@@ -12,7 +13,7 @@ const EntryCard = ({ entry }) => {
           <div className="flex items-start justify-between">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <span className="text-2xl">{entry.moodData.emoji}</span>
+                <span className="text-2xl">{getMoodById(entry?.mood).emoji}</span>
                 <h3 className="font-semibold text-lg">{entry.title}</h3>
               </div>
               <div
@@ -20,14 +21,14 @@ const EntryCard = ({ entry }) => {
                 dangerouslySetInnerHTML={{ __html: entry.content }}
               />
             </div>
-            <time className="text-sm text-gray-500">
-              {format(new Date(entry.createdAt), "MMM d, yyyy")}
+            <time className="text-sm text-gray-500 whitespace-nowrap">
+              {format(new Date(entry.date), "MMM d, yyyy")}
             </time>
           </div>
-          {entry.collection && (
+          {collectionTitle && (
             <div className="mt-4 flex items-center gap-2">
               <span className="text-sm px-2 py-1 bg-orange-100 text-orange-800 rounded">
-                {entry.collection.name}
+                {collectionTitle}
               </span>
             </div>
           )}

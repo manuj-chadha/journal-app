@@ -23,7 +23,7 @@ import { cn } from "@/lib/utils";
 import EntryCard from "@/components/entry-card";
 import { MOODS } from "@/lib/moods";
 
-export function JournalFilters({ entries }) {
+export function JournalFilters({ entries, title }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedMood, setSelectedMood] = useState("");
   const [date, setDate] = useState(null);
@@ -51,7 +51,7 @@ export function JournalFilters({ entries }) {
     // Apply date filter
     if (date) {
       filtered = filtered.filter((entry) =>
-        isSameDay(new Date(entry.createdAt), date)
+        isSameDay(new Date(entry.date), date)
       );
     }
 
@@ -108,11 +108,15 @@ export function JournalFilters({ entries }) {
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0">
             <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              initialFocus
-            />
+  mode="single"
+  selected={date}
+  onSelect={(selectedDate) => {
+    console.log("Date selected:", selectedDate);
+    if (selectedDate) setDate(selectedDate);
+  }}
+  initialFocus
+/>
+
           </PopoverContent>
         </Popover>
 
@@ -140,7 +144,7 @@ export function JournalFilters({ entries }) {
       ) : (
         <div className="flex flex-col gap-4">
           {filteredEntries.map((entry) => (
-            <EntryCard key={entry.id} entry={entry} />
+            <EntryCard key={entry.id} entry={entry} collectionTitle={title} />
           ))}
         </div>
       )}

@@ -1,36 +1,42 @@
-import React from "react";
-import { useForm } from "react-hook-form";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { BarLoader } from "react-spinners";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 
-const CollectionForm = React.forwardRef(function CollectionForm(
-  { onSuccess, loading, open, setOpen },
-  ref
-) {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      name: "",
-      description: "",
-    },
-    mode: "onSubmit",
-  });
+const CollectionForm = ({ onSuccess, loading, open, setOpen }) => {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [error, setError] = useState("");
 
-  const onSubmit = handleSubmit((data) => {
-    if (!data.name.trim()) {
-      return; // Fallback manual check (shouldn't hit if react-hook-form works)
+  // Reset form when dialog opens
+  useEffect(() => {
+    if (open) {
+      setTitle("");
+      setDescription("");
+      setError("");
     }
-    onSuccess(data);          // Send data up
-    reset();                  // Clear form after submission
-    setOpen(false);           // Close dialog
-  });
+  }, [open]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!title.trim()) {
+      setError("Collection name is required");
+      return;
+    }
+    
+    setError("");
+    onSuccess({ title: title.trim(), description: description.trim() });
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -41,28 +47,32 @@ const CollectionForm = React.forwardRef(function CollectionForm(
 
         {loading && <BarLoader className="mb-4" width={"100%"} color="orange" />}
 
-        <form ref={ref} onSubmit={onSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Collection Name */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Collection Name</label>
+            <label htmlFor="name" className="text-sm font-medium">
+              Collection Name
+            </label>
             <Input
-              {...register("name", {
-                required: "Collection name is required",
-                validate: (value) => value.trim().length > 0 || "Name cannot be empty",
-              })}
+              id="name"
+              autoFocus
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter collection name..."
-              className={errors.name ? "border-red-500" : ""}
+              className={error ? "border-red-500" : ""}
             />
-            {errors.name && (
-              <p className="text-red-500 text-sm">{errors.name.message}</p>
-            )}
+            {error && <p className="text-red-500 text-sm">{error}</p>}
           </div>
 
           {/* Description */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Description (Optional)</label>
+            <label htmlFor="description" className="text-sm font-medium">
+              Description (Optional)
+            </label>
             <Textarea
-              {...register("description")}
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               placeholder="Describe your collection..."
             />
           </div>
@@ -72,12 +82,7 @@ const CollectionForm = React.forwardRef(function CollectionForm(
             <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button
-              type="submit"
-              variant="default"
-              disabled={loading}
-              aria-disabled={loading}
-            >
+            <Button type="submit" disabled={loading}>
               {loading ? "Creating..." : "Create Collection"}
             </Button>
           </div>
@@ -85,6 +90,6 @@ const CollectionForm = React.forwardRef(function CollectionForm(
       </DialogContent>
     </Dialog>
   );
-});
+};
 
 export default CollectionForm;

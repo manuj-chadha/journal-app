@@ -5,15 +5,10 @@ import { toast } from "sonner";
 import CollectionPreview from "./collection-preview";
 import CollectionForm from "@/components/collection-form";
 import API from "@/lib/axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import store from "@/redux/store";
 import useGetAllCollections from "@/hooks/useGetCollections";
-
-// Dummy data setup
-const initialCollections = [
-  { id: "1", name: "Gratitude Journal" },
-  { id: "2", name: "Travel Notes" },
-];
+import { setCollections } from "@/redux/collectionSlice";
 
 const initialEntriesByCollection = {
   unorganized: [
@@ -30,28 +25,32 @@ const initialEntriesByCollection = {
 const Collections = () => {
   useGetAllCollections();
   const {collections} = useSelector(store => store.collections);
+  const orderedCollections = [
+  ...(collections?.filter((c) => c.title === "Unorganized") || []),
+  ...(collections?.filter((c) => c.title !== "Unorganized") || []),
+];
+
   const [entriesByCollection, setEntriesByCollection] = useState(
     initialEntriesByCollection
   );
   const [isCollectionDialogOpen, setIsCollectionDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const dispatch=useDispatch();
 
   const handleCreateCollection = async (data) => {
     setLoading(true);
     try {
-      const res=await API.post("/collections", {data}, {withCredentials: true});
-      setTimeout(() => {
-        const newId = crypto.randomUUID();
-        const newCollection = { id: newId, name: data.name };
-        // setCollections((prev) => [...prev, newCollection]);
-        setEntriesByCollection((prev) => ({ ...prev, [newId]: [] }));
-        setIsCollectionDialogOpen(false);
-        setLoading(false);
-        toast.success(`Collection ${data.name} created!`);
-      }, 500); // Simulate async delay
+      const res=await API.post("/collections", data, { headers: {"Content-Type": "application/json"}, withCredentials: true});
+      setIsCollectionDialogOpen(false);
+      toast.success(`Collection ${data.title} created!`);
+      dispatch(setCollections([...collections, res.data.data]));
   
     } catch (error) {
-      
+      console.log(error);
+      toast.error(error.data.message);
+      setIsCollectionDialogOpen(false);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -69,7 +68,7 @@ const Collections = () => {
           onCreateNew={() => setIsCollectionDialogOpen(true)}
         />
 
-        {/* Unorganized Collection */}
+        {/* Unorganized Collection
         {entriesByCollection?.unorganized?.length > 0 && (
           <CollectionPreview
             name="Unorganized"
@@ -78,7 +77,6 @@ const Collections = () => {
           />
         )}
 
-        {/* User Collections */}
         {collections && collections.map((collection) => (
           <CollectionPreview
             key={collection.id}
@@ -86,7 +84,17 @@ const Collections = () => {
             name={collection.title}
             entries={collection.entries || []}
           />
+        ))} */}
+        {orderedCollections.map((collection) => (
+          <CollectionPreview
+            key={collection.id}
+            id={collection.id}
+            name={collection.title}
+            entries={collection.entries || []}
+            isUnorganized={collection.title === "Unorganized"}
+          />
         ))}
+
 
         {/* Modal form for creating collection */}
         <CollectionForm
