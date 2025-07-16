@@ -33,7 +33,7 @@ export default function Signup() {
     }
 
     try {
-      const res = await axios.post("http://localhost:8080/public/signup", { username, email, password }, {headers: {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/public/signup`, { username, email, password }, {headers: {
                     "Content-Type": "application/json"
                 },
         withCredentials: true

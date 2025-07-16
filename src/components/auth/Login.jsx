@@ -18,7 +18,7 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post("http://localhost:8080/public/login", { username, password }, 
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/public/login`, { username, password }, 
         {headers: {
                     "Content-Type": "application/json"
                 },
