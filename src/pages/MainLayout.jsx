@@ -1,21 +1,21 @@
-// src/components/layout/Layout.jsx
 import React from "react";
-// import Header from "../shared/Header"; // Adjust path if needed
-import { Toaster } from "sonner"; // Make sure sonner is installed
-// import "./index.css"; // Tailwind or global styles
+import { Toaster } from "sonner";
 import "react-quill-new/dist/quill.snow.css";
 import Header from "@/components/shared/Header";
 import ScrollToTop from "@/components/ScrollToTop";
+import { useLocation } from "react-router-dom";
 
 function Layout({ children }) {
+
+  const { pathname } = useLocation();
+  const hideLayout = pathname === "/login" || pathname === "/signup";
+
   return (
     <>
     <ScrollToTop />
-      {/* Background Image Layer */}
       <div className="inset-0 bg-[url('/bg.jpg')] opacity-50 fixed -z-10" />
 
-      {/* Header */}
-      <Header />
+       {!hideLayout && <Header />}
 
       {/* Main Content */}
       <main className="min-h-screen">
@@ -26,11 +26,13 @@ function Layout({ children }) {
       <Toaster richColors />
 
       {/* Footer */}
-      <footer className="py-12">
-        <div className="container mx-auto px-4 text-center text-gray-900">
-          <p className="text-center">Made with 💗 by Manuj Chadha</p>
-        </div>
-      </footer>
+      {!hideLayout && (
+        <footer className="py-12">
+          <div className="container mx-auto px-4 text-center text-gray-900">
+            <p>Made with ❤ by Manuj Chadha</p>
+          </div>
+        </footer>
+      )}
     </>
   );
 }
