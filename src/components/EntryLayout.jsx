@@ -8,7 +8,7 @@ export default function EntryLayout({ children }) {
       <div className="mb-8 text-left">
         <Link
           to="/dashboard"
-          className="text-sm text-orange-600 text-left hover:text-orange-700"
+          className="text-sm text-pink-700 text-left hover:text-pink-800"
         >
           ← Back to Dashboard
         </Link>

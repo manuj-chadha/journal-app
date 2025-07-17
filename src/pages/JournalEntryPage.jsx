@@ -7,15 +7,18 @@ import API from "@/lib/axios";
 // import DeleteDialog from "@/components/delete-dialog";
 import EditButton from "@/components/edit-button";
 import DeleteDialog from "@/components/delete-dialog";
+import Loading from "@/components/skeleton/EntryLoading";
 // import { getJournalEntry } from "@/actions/journal";
 
 export default function JournalEntryPage() {
   const { journalId } = useParams();
   const [entry, setEntry]=useState({});
   const mood = getMoodById(entry.mood);
+  const [loading, setLoading]=useState(false);
 
   useEffect(()=> {
     const fetchJournal=async()=>{
+      setLoading(true);
       try {
         const res=await API.get(`/journal/${journalId}`, { withCredentials: true });
         if(res.data.success){
@@ -23,11 +26,15 @@ export default function JournalEntryPage() {
         }
       } catch (error) {
         console.error("Error fetching the journal: ", error);
-        
+      }
+      finally {
+        setLoading(false);
       }
     };
     fetchJournal();
   }, [journalId]);
+
+  if(loading) return <Loading />
 
   return (
     <>

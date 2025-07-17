@@ -10,18 +10,6 @@ import store from "@/redux/store";
 import useGetAllCollections from "@/hooks/useGetCollections";
 import { setCollections } from "@/redux/collectionSlice";
 
-const initialEntriesByCollection = {
-  unorganized: [
-    { id: "e1", title: "Entry without a collection" },
-    { id: "e2", title: "Random Thoughts" },
-  ],
-  "1": [
-    { id: "e3", title: "Feeling Grateful Today" },
-    { id: "e4", title: "Gratitude Entry 2" },
-  ],
-  "2": [{ id: "e5", title: "Trip to the mountains" }],
-};
-
 const Collections = () => {
   useGetAllCollections();
   const {collections} = useSelector(store => store.collections);
@@ -30,9 +18,7 @@ const Collections = () => {
   ...(collections?.filter((c) => c.title !== "Unorganized") || []),
 ];
 
-  const [entriesByCollection, setEntriesByCollection] = useState(
-    initialEntriesByCollection
-  );
+  const [entriesByCollection, setEntriesByCollection] = useState({});
   const [isCollectionDialogOpen, setIsCollectionDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch=useDispatch();

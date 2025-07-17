@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import Loading from "./CollectionLoading";
+import Loading from "./skeleton/CollectionLoading";
 
 export default function CollectionLayout({ children }) {
   return (

@@ -21,6 +21,7 @@ import {
 import { Link } from "react-router-dom";
 import API from "@/lib/axios";
 import { getMoodById, getMoodTrend } from "@/lib/moods";
+import MoodAnalyticsSkeleton from "./skeleton/analytics-loading";
 
 const timeOptions = [
   { value: "7", label: "Last 7 Days" },
@@ -73,13 +74,13 @@ const MoodAnalytics = () => {
     return null;
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <MoodAnalyticsSkeleton />;
   if (!analytics) return <div>No Analytics Data Found.</div>;
 
   const { timeline, stats, totalEntries } = analytics;
 
   return (
-    <div className="max-w-5xl mx-auto px-2 space-y-6">
+    <div className="max-w-5xl mx-auto px-0 space-y-6">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2">
         <h2 className="text-3xl md:text-5xl font-bold gradient-title">Dashboard</h2>
         <Select value={period} onValueChange={setPeriod}>

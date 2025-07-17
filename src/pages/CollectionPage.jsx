@@ -1,5 +1,6 @@
 import DeleteCollectionDialog from "@/components/delete-collection";
 import { JournalFilters } from "@/components/journal-filters";
+import CollectionLoading from "@/components/skeleton/CollectionLoading";
 import API from "@/lib/axios";
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
@@ -12,9 +13,11 @@ export default function CollectionPage() {
   
   const [entries, setEntries] = useState([]);
   const [collection, setCollection] = useState({});
+  const [loading, setLoading]=useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const res = await API.get(`/collections/${collectionId}`, {
           withCredentials: true,
@@ -28,10 +31,14 @@ export default function CollectionPage() {
       } catch (error) {
         console.error("Error fetching collection:", error);
       }
+      finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
   }, [collectionId]);
+  if(loading) return <CollectionLoading />
 
   return (
     <div className="space-y-6">

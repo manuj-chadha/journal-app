@@ -5,6 +5,8 @@ const MoodAnalyticsSkeleton = () => {
   return (
     <div className="space-y-6">
       <Skeleton className="h-12 w-60" />
+      <h2 className="text-3xl md:text-5xl font-bold gradient-title">Dashboard</h2>
+
       {/* Stats Cards Skeleton */}
       <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {[1, 2, 3].map((i) => (
@@ -28,24 +30,12 @@ const MoodAnalyticsSkeleton = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px] w-full">
-            <div className="animate-pulse space-y-4">
-              {/* Chart area skeleton */}
-              <div className="h-full w-full bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 rounded-lg opacity-75" />
-
-              {/* X-axis labels */}
-              <div className="flex justify-between px-4">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Skeleton key={i} className="h-3 w-12" />
-                ))}
-              </div>
-
-              {/* Y-axis labels */}
-              <div className="absolute left-0 top-0 h-full py-8 flex flex-col justify-between">
-                {[1, 2, 3, 4].map((i) => (
-                  <Skeleton key={i} className="h-3 w-8" />
-                ))}
-              </div>
+          <div className="h-[300px] w-full space-y-4">
+            <Skeleton className="h-64 w-full rounded-lg" />
+            <div className="flex justify-between px-4">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Skeleton key={i} className="h-3 w-12" />
+              ))}
             </div>
           </div>
         </CardContent>

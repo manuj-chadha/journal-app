@@ -2,20 +2,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Yeseva+One&family=Manrope:wght@400;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
+@import 'react-quill/dist/quill.snow.css';
+
 
 body {
   font-family: 'Nunito', sans-serif;
+  /* color: #7F55B1; */
 }
 
 h1, h2, h3 {
   font-family: 'Manrope', serif;
+  
 }
+.element {
+  background: 
+    linear-gradient(rgba(255, 192, 203, 0.5), rgba(255, 192, 203, 0.5)), /* Color Overlay */
+    url('logo.jpg') center/cover no-repeat;
+}
+
 
 .gradient-title {
   font-family: 'Yeseva One', serif;
 }
 .quote, .prompt {
   font-family: 'Caveat', cursive;
+    /* color: #3D365C; */
+
 }
 
 
@@ -176,6 +188,11 @@ h1, h2, h3 {
   overflow-y: auto;
   width: 100%;
 }
+.ql-editor img {
+  width: 300px;
+  height: auto;
+}
+
 
 html {
   scroll-behavior: smooth;

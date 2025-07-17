@@ -19,6 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import TestimonialCarousel from "@/components/testimonial-carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import faqs from "../lib/faqs.json";
+import { Link } from "react-router-dom";
 
 const dummyAdvice = "What are you most grateful for today?";
 
@@ -84,11 +85,13 @@ export default function Home() {
         </div>
 
         <div className="flex justify-center gap-4">
+          <Link to="/journal/write">
           <Button
             className="bg-gradient-to-r from-pink-400 to-pink-500 text-white hover:from-pink-500 hover:to-rose-500 active:scale-95 transition shadow-md hover:shadow-lg px-8 py-6 rounded-full flex items-center gap-2"
           >
             Start Writing <ChevronRight className="h-5 w-5" />
           </Button>
+          </Link>
           <a href="#features">
             <Button
               variant="outline"

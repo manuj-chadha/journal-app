@@ -45,7 +45,7 @@ function Header() {
 
           {!isUserSignedIn ? (
             <Link to="/login">
-              <Button variant="outline">Login</Button>
+              <Button variant="outline" class>Login</Button>
             </Link>
           ) : (
             <Button variant="ghost" className="font-semibold">
