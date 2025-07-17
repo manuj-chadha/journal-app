@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -30,21 +28,6 @@ const timeOptions = [
   { value: "30", label: "Last 30 Days" },
 ];
 
-// const getMoodById = (id) => {
-//   const moods = {
-//     happy: { emoji: "😄" },
-//     neutral: { emoji: "😐" },
-//     sad: { emoji: "😞" },
-//   };
-//   return moods[id] || { emoji: "❓" };
-// };
-
-// const getMoodTrend = (avg) => {
-//   if (avg >= 8) return "Great!";
-//   if (avg >= 5) return "Okay";
-//   return "Not Good";
-// };
-
 const MoodAnalytics = () => {
   const [period, setPeriod] = useState("7");
   const [analytics, setAnalytics] = useState(null);
@@ -70,56 +53,35 @@ const MoodAnalytics = () => {
     fetchAnalytics();
   }, [period]);
 
-  // const CustomTooltip = ({ active, payload, label }) => {
-  //   if (active && payload?.length) {
-  //     return (
-  //       <div className="bg-white p-4 border rounded-lg shadow-lg">
-  //         <p className="font-medium">
-  //           {format(parseISO(label), "MMM d, yyyy")}
-  //         </p>
-  //         <p className="text-orange-600">Average Mood: {payload[0].value}</p>
-  //         <p className="text-blue-600">Entries: {payload[1].value}</p>
-  //       </div>
-  //     );
-  //   }
-  //   return null;
-  // };
   const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload?.length) {
-    const averageScoreData = payload.find(p => p.dataKey === "averageMood");
-    const entryCountData = payload.find(p => p.dataKey === "entryCount");
+    if (active && payload?.length) {
+      const averageScoreData = payload.find((p) => p.dataKey === "averageMood");
+      const entryCountData = payload.find((p) => p.dataKey === "entryCount");
 
-    return (
-      <div className="bg-white p-4 border rounded-lg shadow-lg">
-        <p className="font-medium">{format(parseISO(label), "MMM d, yyyy")}</p>
-        <p className="text-orange-600">
-          Average Mood: {averageScoreData?.value ?? "-"}
-        </p>
-        <p className="text-blue-600">
-          Entries: {entryCountData?.value ?? "-"}
-        </p>
-      </div>
-    );
-  }
-  return null;
-};
-
+      return (
+        <div className="bg-white p-4 border rounded-lg shadow-lg max-w-[200px]">
+          <p className="font-medium">{format(parseISO(label), "MMM d, yyyy")}</p>
+          <p className="text-orange-600">
+            Average Mood: {averageScoreData?.value ?? "-"}
+          </p>
+          <p className="text-blue-600">
+            Entries: {entryCountData?.value ?? "-"}
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   if (loading) return <div>Loading...</div>;
-
   if (!analytics) return <div>No Analytics Data Found.</div>;
 
   const { timeline, stats, totalEntries } = analytics;
-  console.log(stats);
-  console.log(timeline);
-  
-  
 
   return (
-    <>
-      <div className="flex justify-between items-center">
-        <h2 className="text-5xl font-bold gradient-title">Dashboard</h2>
-
+    <div className="max-w-5xl mx-auto px-2 space-y-6">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2">
+        <h2 className="text-3xl md:text-5xl font-bold gradient-title">Dashboard</h2>
         <Select value={period} onValueChange={setPeriod}>
           <SelectTrigger className="w-[140px]">
             <SelectValue />
@@ -136,14 +98,14 @@ const MoodAnalytics = () => {
 
       {totalEntries === 0 ? (
         <div>
-          No Entries Found.{" "}
+          No Entries Found. {" "}
           <Link to="/journal/write" className="underline text-orange-400">
             Write New
           </Link>
         </div>
       ) : (
         <div className="space-y-6">
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-2 md:gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium">Total Entries</CardTitle>
@@ -174,7 +136,7 @@ const MoodAnalytics = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold flex items-center gap-2">
-                  {getMoodById(stats.mostFrequentMood)?.emoji}{" "}
+                  {getMoodById(stats.mostFrequentMood)?.emoji} {" "}
                   {getMoodTrend(stats.averageMoodScore)}
                 </div>
               </CardContent>
@@ -186,21 +148,24 @@ const MoodAnalytics = () => {
               <CardTitle>Mood Timeline</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="h-[300px] w-full">
+              <div className="h-[200px] sm:h-[250px] md:h-[300px] lg:h-[400px] w-full min-w-[310px] max-sm:-ml-12">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart
                     data={timeline}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                    margin={{ top: 0, right: 10, left: 10, bottom: 0 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
                       dataKey="date"
                       tickFormatter={(date) => format(parseISO(date), "MMM d")}
+                      className="max-sm:text-xs"
                     />
-                    <YAxis yAxisId="left" domain={[0, 10]} />
-                    <YAxis yAxisId="right" orientation="right" domain={[0, "auto"]} />
+                    <YAxis yAxisId="left" domain={[0, 10]} className="max-sm:text-xs" />
+                    {typeof window !== 'undefined' && window.innerWidth > 640 && (
+                      <YAxis yAxisId="right" orientation="right" domain={[0, "auto"]} />
+                    )}
                     <Tooltip content={<CustomTooltip />} />
-                    <Legend />
+                    {typeof window !== 'undefined' && window.innerWidth > 640 && <Legend />}
                     <Line
                       yAxisId="left"
                       type="monotone"
@@ -224,7 +189,7 @@ const MoodAnalytics = () => {
           </Card>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

@@ -13,7 +13,8 @@ function Layout({ children }) {
   return (
     <>
     <ScrollToTop />
-      <div className="inset-0 bg-[url('/bg.jpg')] opacity-50 fixed -z-10" />
+      {/* <div className="inset-0 bg-[url('/bg.jpg')] opacity-50 fixed -z-10" /> */}
+      <div className="inset-0 bg-[#FEEBF6] opacity-50 fixed -z-10" />
 
        {!hideLayout && <Header />}
 

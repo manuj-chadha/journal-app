@@ -15,6 +15,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { Provider } from 'react-redux'
 import store, { persistor } from './redux/store'
 import JournalEntryPage from './pages/JournalEntryPage'
+import { ThemeProvider } from './components/theme-provider'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
     <Provider store={store}>
   <PersistGate loading={null} persistor={persistor}>
     <BrowserRouter>
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -35,6 +37,7 @@ function App() {
           <Route path='/journal/:journalId' element={<JournalEntryPage />} />
         </Routes>
       </Layout>
+    </ThemeProvider>
     </BrowserRouter>
   </PersistGate>
 </Provider>
