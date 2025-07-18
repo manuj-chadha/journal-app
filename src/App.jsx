@@ -17,6 +17,7 @@ import store, { persistor } from './redux/store'
 import JournalEntryPage from './pages/JournalEntryPage'
 import { ThemeProvider } from './components/theme-provider'
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import InDeveloping from './pages/development'
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<InDeveloping />} />
           <Route path="/journal/write" element={<EntryLayout><CreateJournalEntry /></EntryLayout>} />
           <Route path="/collection/:collectionId" element={<CollectionPage />} />
           <Route path="/collection/unorganized" element={<CollectionPage />} />

@@ -9,7 +9,7 @@ const EntryCard = ({ entry, collectionTitle }) => {
   return (
     <Link to={`/journal/${entry.id}`}>
       <Card className="hover:shadow-md transition-shadow">
-        <CardContent className="p-6">
+        <CardContent className="p-2 sm:p-6">
           <div className="flex items-start justify-between">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
