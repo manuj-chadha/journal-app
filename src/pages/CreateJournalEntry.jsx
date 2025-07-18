@@ -130,7 +130,7 @@ export default function CreateJournalEntry() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 text-left">
+    <div className="container mx-auto px-0 sm:px-2 md:px-4 py-6 text-left">
       <form onSubmit={onSubmit} className="space-y-4 mx-auto">
         <h1 className="text-5xl md:text-6xl gradient-title text-center mb-6">
           {isEditMode ? "Edit Entry" : "What's on your mind?"}

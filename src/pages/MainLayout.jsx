@@ -4,6 +4,7 @@ import "react-quill-new/dist/quill.snow.css";
 import Header from "@/components/shared/Header";
 import ScrollToTop from "@/components/ScrollToTop";
 import { useLocation } from "react-router-dom";
+import BottomNav from "@/components/shared/BottomNav";
 
 function Layout({ children }) {
 
@@ -17,6 +18,7 @@ function Layout({ children }) {
       <div className="inset-0 bg-[#FEEBF6] opacity-50 fixed -z-10 element" />
 
        {!hideLayout && <Header />}
+       {!hideLayout && <BottomNav />}
 
       {/* Main Content */}
       <main className="min-h-screen">

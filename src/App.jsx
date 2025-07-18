@@ -16,14 +16,19 @@ import { Provider } from 'react-redux'
 import store, { persistor } from './redux/store'
 import JournalEntryPage from './pages/JournalEntryPage'
 import { ThemeProvider } from './components/theme-provider'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 
 function App() {
+  const queryClient = new QueryClient();
+
   return (
     <>
     <Provider store={store}>
   <PersistGate loading={null} persistor={persistor}>
     <BrowserRouter>
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <QueryClientProvider client={queryClient}>
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -37,6 +42,7 @@ function App() {
           <Route path='/journal/:journalId' element={<JournalEntryPage />} />
         </Routes>
       </Layout>
+      </QueryClientProvider>
     </ThemeProvider>
     </BrowserRouter>
   </PersistGate>

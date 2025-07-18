@@ -7,6 +7,7 @@ import {
   ChevronRight,
   BarChart2,
   FileText,
+  Quote,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +21,8 @@ import TestimonialCarousel from "@/components/testimonial-carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import faqs from "../lib/faqs.json";
 import { Link } from "react-router-dom";
+import { useDailyPrompt } from "@/hooks/getDailyPrompt";
+import { randomLoadingText } from "@/lib/quotes";
 
 const dummyAdvice = "What are you most grateful for today?";
 
@@ -45,6 +48,8 @@ const features = [
 ];
 
 export default function Home() {
+  const { data: prompt, isLoading, isError, refetch } = useDailyPrompt();
+
   return (
     <div className="relative container mx-auto px-4 pt-16 pb-16">
       {/* Hero Section */}
@@ -59,7 +64,7 @@ export default function Home() {
 
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-t from-pink-50 via-transparent to-transparent pointer-events-none z-10" />
-          <div className="bg-[#FEEBF6] rounded-2xl p-4 max-full mx-auto">
+          <div className="bg-pink-100 rounded-2xl p-4 max-full mx-auto">
             <div className="border-b border-pink-200 pb-4 mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Calendar className="h-5 w-5 text-pink-500" />
@@ -73,13 +78,14 @@ export default function Home() {
                 <div className="h-3 w-3 rounded-full bg-pink-700" />
               </div>
             </div>
-            <div className="space-y-4 p-4">
-              <h3 className="text-xl font-semibold text-pink-700">
-                {dummyAdvice}
-              </h3>
-              <Skeleton className="h-4 bg-pink-100 rounded w-3/4" />
+            <div className="space-y-4 p-4 max-sm:p-2">
+              <blockquote className="border-l-4 border-pink-300 text-left text-md sm:border-pink-500 max-sm:pl-2 sm:text-center text-pink-700 sm:text-xl font-medium italic font-quote leading-relaxed">
+                “{isLoading ? randomLoadingText : (prompt || "What's on your mind today?")}”
+              </blockquote>
+
+              <Skeleton className="h-4 bg-pink-200 rounded w-3/4" />
               <Skeleton className="h-4 bg-pink-200 rounded w-full" />
-              <Skeleton className="h-4 bg-pink-300 rounded w-2/3" />
+              <Skeleton className="h-4 bg-pink-200 rounded w-2/3" />
             </div>
           </div>
         </div>
@@ -230,9 +236,11 @@ export default function Home() {
               Join thousands of writers who have already discovered the power of
               digital journaling.
             </p>
+            <Link to="/journal/write">
             <Button className="animate-bounce bg-pink-500 text-white hover:bg-pink-600 px-6 py-3 rounded-md">
               Get Started for Free <ChevronRight className="ml-2 h-4 w-4" />
             </Button>
+            </Link>
           </CardContent>
         </Card>
       </div>
