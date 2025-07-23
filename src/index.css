@@ -189,12 +189,9 @@ h1, h2, h3 {
   }
 }
 @layer base {
-  /* Remove default focus outline on mouse click */
-  *:focus:not(:focus-visible) {
+  * {
     @apply outline-none;
   }
-
-  /* Apply a subtle custom focus ring when focused via keyboard */
   *:focus-visible {
     @apply ring-2 ring-rose-400 ring-offset-2 transition-shadow;
   }
