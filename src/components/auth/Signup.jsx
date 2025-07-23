@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
-import InvisibleReCAPTCHA from "./InvisibleReCAPTCHA";
 import { useNavigate } from "react-router-dom";
+import InvisibleReCAPTCHA from "./InvisibleRecaptcha";
 
 const Signup = () => {
   const [form, setForm] = useState({ username: "", email: "", password: "" });
