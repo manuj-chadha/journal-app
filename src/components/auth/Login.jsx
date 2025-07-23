@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,40 +8,65 @@ import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/authSlice";
 import axios from "axios";
+import InvisibleReCAPTCHA from "./InvisibleRecaptcha";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const recaptchaRef = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleLogin = async () => {
-    setLoading(true);
+  const handleCaptchaVerify = async (token) => {
     try {
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/public/login`, { username, password }, 
-        {headers: {
-                    "Content-Type": "application/json"
-                },
-        withCredentials: true
-    });
-    console.log(res);
-    
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_API_URL}/public/login`,
+        { username, password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "x-captcha-token": token, // customize header key if needed
+          },
+          withCredentials: true,
+        }
+      );
+
       localStorage.setItem("token", res.data.data.token);
       dispatch(setUser(res.data.data.user));
       toast.success("Login successful!");
       navigate("/");
     } catch (err) {
       toast.error(err.response?.data?.message || "Login failed.");
+    } finally {
+      setLoading(false);
     }
-    finally {
+  };
+
+  const handleLogin = async () => {
+    if (!username || !password) {
+      toast.error("Please enter both username and password.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      if (recaptchaRef.current) {
+        // @ts-ignore – Ignore type warning for execute()
+        await recaptchaRef.current.execute();
+      } else {
+        toast.error("Captcha not loaded.");
+        setLoading(false);
+      }
+    } catch (err) {
+      toast.error("Captcha execution failed.");
       setLoading(false);
     }
   };
 
   return (
     <div className="container max-h-screen mx-auto px-4 pt-16 pb-16">
-      <div className="max-w-md max-h-full mx-auto text-center space-y-8 pb-5">
+      <div className="max-w-md mx-auto text-center space-y-8 pb-5">
         <h1 className="text-4xl md:text-6xl gradient-title mb-4">
           Welcome Back
         </h1>
@@ -50,12 +75,15 @@ export default function LoginPage() {
         </p>
 
         <Card className="shadow-lg">
-            <span className="block text-lg font-semibold text-orange-800">
-              Login
-            </span>
-            <CardContent className="-mt-2 space-y-6">
+          <span className="block text-lg font-semibold text-orange-800">
+            Login
+          </span>
+          <CardContent className="-mt-2 space-y-6">
             <div className="flex flex-col gap-1">
-              <label htmlFor="username" className="text-sm font-medium text-left text-orange-800">
+              <label
+                htmlFor="username"
+                className="text-sm font-medium text-left text-orange-800"
+              >
                 Username
               </label>
               <Input
@@ -65,7 +93,11 @@ export default function LoginPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
-              <label htmlFor="password" className="text-sm font-medium text-left text-orange-800 mt-3">
+
+              <label
+                htmlFor="password"
+                className="text-sm font-medium text-left text-orange-800 mt-3"
+              >
                 Password
               </label>
               <Input
@@ -76,11 +108,12 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+
             <Button
               variant="journal"
               className="w-full py-6"
               onClick={handleLogin}
-              disabled={loading}  // disables button during loading
+              disabled={loading}
             >
               {loading ? (
                 <>
@@ -93,6 +126,7 @@ export default function LoginPage() {
                 </>
               )}
             </Button>
+
             <div className="text-sm text-orange-700">
               Don’t have an account?{" "}
               <Link to="/signup" className="text-orange-900 underline">
@@ -100,6 +134,7 @@ export default function LoginPage() {
               </Link>
             </div>
           </CardContent>
+
           <div className="flex items-center justify-center gap-4">
             <div className="h-10 w-10 bg-orange-100 rounded-full flex items-center justify-center">
               <User className="h-5 w-5 text-orange-600" />
@@ -110,6 +145,7 @@ export default function LoginPage() {
           </div>
         </Card>
 
+        <InvisibleReCAPTCHA ref={recaptchaRef} onVerify={handleCaptchaVerify} />
       </div>
     </div>
   );
