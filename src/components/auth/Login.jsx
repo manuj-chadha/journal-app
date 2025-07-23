@@ -51,8 +51,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       if (recaptchaRef.current) {
-        // @ts-ignore – Ignore type warning for execute()
-        await recaptchaRef.current.execute();
+        await recaptchaRef.current.executeCaptcha();
       } else {
         toast.error("Captcha not loaded.");
         setLoading(false);

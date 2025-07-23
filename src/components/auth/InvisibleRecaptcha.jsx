@@ -1,14 +1,16 @@
-import React, { useRef } from 'react';
+import React, { useRef, useImperativeHandle } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-const InvisibleReCAPTCHA = ({ onVerify }) => {
+const InvisibleReCAPTCHA = React.forwardRef(({ onVerify }, ref) => {
   const recaptchaRef = useRef();
 
-  const executeCaptcha = async () => {
-    const token = await recaptchaRef.current.executeAsync();
-    recaptchaRef.current.reset();
-    onVerify(token);
-  };
+  useImperativeHandle(ref, () => ({
+    executeCaptcha: async () => {
+      const token = await recaptchaRef.current.executeAsync();
+      recaptchaRef.current.reset();
+      onVerify(token);
+    }
+  }));
 
   return (
     <ReCAPTCHA
@@ -18,6 +20,6 @@ const InvisibleReCAPTCHA = ({ onVerify }) => {
       badge="bottomright"
     />
   );
-};
+});
 
 export default InvisibleReCAPTCHA;
