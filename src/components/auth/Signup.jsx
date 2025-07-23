@@ -33,11 +33,10 @@ export default function Signup() {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_API_URL}/public/signup`,
-        { username, email, password },
+        { username, email, password, recaptchaToken: token, },
         {
           headers: {
             "Content-Type": "application/json",
-            "x-captcha-token": token,
           },
           withCredentials: true,
         }

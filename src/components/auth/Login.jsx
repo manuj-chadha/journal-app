@@ -22,11 +22,10 @@ export default function LoginPage() {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_API_URL}/public/login`,
-        { username, password },
+        { username, password, recaptchaToken: token, },
         {
           headers: {
             "Content-Type": "application/json",
-            "x-captcha-token": token, // customize header key if needed
           },
           withCredentials: true,
         }
