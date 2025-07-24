@@ -3,9 +3,8 @@ import MoodAnalytics from "@/components/mood-analytics";
 import { useState } from "react";
 
 const Dashboard = () => {
-  // Mock or future props-based data can be added here if needed
-  const collections = useState(); // placeholder
-  const entriesByCollection = {}; // placeholder
+  const collections = useState(); 
+  const entriesByCollection = {}; 
 
   return (
     <div className="px-4 py-8 space-y-8">

@@ -37,7 +37,7 @@ const MoodAnalytics = () => {
   const fetchAnalytics = async () => {
     setLoading(true);
     try {
-      const res = await API.get(`/api/dashboard?periodDays=${period}`, {
+      const res = await API.get(`/dashboard?periodDays=${period}`, {
         withCredentials: true,
       });
       if (res.data.success) {
