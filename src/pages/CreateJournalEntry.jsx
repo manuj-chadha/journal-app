@@ -86,19 +86,21 @@ export default function CreateJournalEntry() {
     data.moodScore = getMoodById(data.mood).score;
     try {
       if (isEditMode) {
-        await API.put(`/journal/${editId}/update`, data, {
+        const res=await API.put(`/journal/${editId}/update`, data, {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         });
+        navigate(`/collection/${res.data.data.collectionId}`);
+
         toast.success("Entry updated!");
       } else {
-        await API.post("/journal", data, {
+        const res=await API.post("/journal", data, {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         });
         toast.success("Entry created!");
+        navigate(`/collection/${res.data.data.collectionId}`);
       }
-      navigate(`/collection/${data.collectionId}`);
     } catch (error) {
       toast.error("Failed to save entry");
       console.error("Submission error:", error);
