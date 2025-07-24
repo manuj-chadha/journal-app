@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { PenBox, FolderOpen } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,10 +11,12 @@ function Header() {
   const { user } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
   const [showConfirm, setShowConfirm] = useState(false);
-
+  const navigate=useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("token");
     dispatch(setUser(null));
+    navigate("/");
+    
     toast.success("See you soooon... 👋")  
   };
   
@@ -37,7 +39,7 @@ function Header() {
 
         {!user ? (
           <Link to="/login">
-            <Button variant="ghost" className="md:hidden">Login</Button>
+            <Button variant="outline" className="md:hidden">Login</Button>
           </Link>
         ) : (
           renderLogoutButton("md:hidden")
